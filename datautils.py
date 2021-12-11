@@ -98,22 +98,3 @@ def encode_data(
     for i in data:
         encoded_data.append([vocab.get(t, unk_idx) for t in i])
     return encoded_data
-
-
-def custom_argmax(values: list, top_k: int = 3) -> Tuple[list, list]:
-    sorted_values = sorted(values, reverse=True)
-    k_max_vals = sorted_values[:top_k]
-    k_max_idxs = []
-    for val in k_max_vals:
-        copy = values[:]
-        offset = 0
-        while True:
-            _raw_idx = copy.index(val)
-            _idx = offset + _raw_idx
-            if _idx not in k_max_idxs:
-                k_max_idxs.append(_idx)
-                break
-            else:
-                offset = offset + _raw_idx + 1
-                copy = values[offset:]
-    return k_max_vals, k_max_idxs
