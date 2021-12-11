@@ -1,5 +1,6 @@
 import argparse
 import math
+import shutil
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -269,7 +270,7 @@ class HiddenMarkovModel:
             predictions.append(top_k_paths)
 
         for i in range(top_k):
-            export_path = export_dir / f"{stem}.p{i+1}.out"
+            export_path = export_dir / f"{stem}.top{i+1}.tmp"
             with export_path.open("w") as f:
                 content = []
                 for pred, tokens in zip(predictions, test_tokens):
@@ -282,6 +283,16 @@ class HiddenMarkovModel:
                     content.extend(new_lines)
                 f.write("\n".join(content))
                 print(f"Result saved: '{export_path}'")
+
+        p2_path_tmp = export_dir / f"{stem}.top1.tmp"
+        p2_path = export_dir / f"{stem}.p2.out"
+        p3_path_tmp = export_dir / f"{stem}.top5.tmp"
+        p3_path = export_dir / f"{stem}.p3.out"
+        if p2_path_tmp.is_file():
+            shutil.copy(p2_path_tmp, p2_path)
+        if p3_path_tmp.is_file():
+            shutil.copy(p3_path_tmp, p3_path)
+
         return
 
     def naive_predict_single(self, X: List[int]) -> List[int]:
@@ -297,7 +308,7 @@ class HiddenMarkovModel:
         for test_sample in encoded_test_tokens:
             predictions.append(self.naive_predict_single(test_sample))
 
-        export_path = export_dir / f"{stem}.naive.out"
+        export_path = export_dir / f"{stem}.p1.out"
         with export_path.open("w") as f:
             content = []
             for pred, tokens in zip(predictions, test_tokens):

@@ -22,8 +22,8 @@ Dependencies:
 
 Relevant code section:
 
--   Function that computes the emission probability: [hmm.py Line 35-66](hmm.py#L35)
--   Simple sentiment analysis based on emission probability: [hmm.py Line 287-310](hmm.py#L287)
+-   Function that computes the emission probability: [hmm.py Line 36-67](hmm.py#L36)
+-   Simple sentiment analysis based on emission probability: [hmm.py Line 298-321](hmm.py#L298)
 
 To run the code:
 
@@ -35,9 +35,9 @@ python hmm.py --train "ES/train" --test "ES/dev.in" --naive
 
 Relevant code section:
 
--   Function that computes the transition probability: [hmm.py Line 68-107](hmm.py#L68)
--   We use log-likelihood to compute the probability of emission and transition to avoid underflow: [hmm.py Line 99](hmm.py#L99)
--   Top-k Viterbi algorithm: [hmm.py Line 185-259](hmm.py#L185)
+-   Function that computes the transition probability: [hmm.py Line 69-108](hmm.py#L69)
+-   We use log-likelihood to compute the probability of emission and transition to avoid underflow: [hmm.py Line 100](hmm.py#L100)
+-   Top-k Viterbi algorithm: [hmm.py Line 186-260](hmm.py#L186)
 
 To run the code:
 
