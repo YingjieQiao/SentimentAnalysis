@@ -25,14 +25,14 @@ Relevant code section:
 -   Function that computes the emission probability: [hmm.py Line 36-67](hmm.py#L36)
 -   Simple sentiment analysis based on emission probability: [hmm.py Line 298-321](hmm.py#L298)
 
-### To run the code:
+### To run the code
 
 ```bash
 python hmm.py --train "ES/train" --test "ES/dev.in" --naive
 python hmm.py --train "RU/train" --test "RU/dev.in" --naive
 ```
 
-### To evaluate accuracy:
+### To evaluate accuracy
 
 For ES:
 
