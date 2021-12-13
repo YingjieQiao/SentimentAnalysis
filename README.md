@@ -192,7 +192,7 @@ Sentiment  F: 0.2124
 
 ## Part 4-RNN
 
-We first tryout Recurrent Neutral Network to perform this sequence labeling task. However, the result was poor.
+We first tryout Recurrent Neural Network to perform this sequence labeling task. However, the result was poor.
 
 The code we use can be found in RNN/ and specifically RNN/part4.py,RNN/script.sh. We will not use that for our finnal submission.
 
@@ -221,7 +221,7 @@ We then perform backtracking to find out the decoding with maximum likelyhood.
 
 ### Label Smoothing
 
-What's more, we add label smothing in the model when calculating model parametes, shown in line 197 and 64.
+What's more, we add label smoothing in the model when calculating model parameters, shown in line 197 and 64.
 
 
 
