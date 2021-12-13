@@ -42,9 +42,20 @@ Relevant code section:
 To run the code:
 
 ```bash
-python hmm.py --train "ES/train" --test "ES/dev.in" --top-k "5"
+python3 hmm.py --train "ES/train" --test "ES/dev.in" --top-k "5"
+
+python3 hmm.py --train "RU/train" --test "RU/dev.in" --top-k "5"
 ```
 
 ## Part 4
 
 TODO
+python3 hmm.py --train "RU/train" --test "RU/dev.in" --top-k "5"
+
+python3 EvalScript/evalResult.py ES/dev.out ES/dev.p4.out
+
+
+
+python3 second_order_hmm.py --train "RU/train" --test "RU/dev.in"
+python3 EvalScript/evalResult.py RU/dev.out Ru/dev.p4.out
+## Evaluation
