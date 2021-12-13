@@ -221,7 +221,7 @@ We then perform backtracking to find out the decoding with maximum likelyhood.
 
 ### Label Smoothing
 
-What's more, we add label smoothing in the model when calculating model parameters, shown in line 197 and 64.
+What's more, we add label smoothing in the model when calculating model parameters, shown in line 197 and 64 in second_order_hmm.py .
 
 
 
