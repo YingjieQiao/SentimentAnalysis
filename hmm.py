@@ -60,8 +60,8 @@ class HiddenMarkovModel:
         # give <UNK> a very low probability for each label
         if k > 0:
             for u_idx, u_sum in enumerate(u_sums):
-                self.emission_probs[u_idx][0] = (
-                    prob_func(k / u_sum) if use_log_likelihood else k / u_sum
+                self.emission_probs[u_idx][self.token_to_idx["<UNK>"]] = prob_func(
+                    k / u_sum
                 )
 
         return

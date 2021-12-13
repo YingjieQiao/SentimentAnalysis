@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Softmax:
     def predict(self, x):
         exp_scores = np.exp(x)

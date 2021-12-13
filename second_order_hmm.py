@@ -48,27 +48,30 @@ class SecondOrderHiddenMarkovModel:
 
         u_sums = [sum(u) + k for u in counter]
         if use_log_likelihood:
-            prob_func = lambda x: math.log(x) 
+            prob_func = lambda x: math.log(x)
         else:
             prob_func = lambda x: x
 
         self.emission_probs = [
-            [prob_func((o_count + label_smoothing_factor )/ (u_sum + label_smoothing_factor*self.token_num)) for o_count in u]
+            [
+                prob_func(
+                    (o_count + label_smoothing_factor)
+                    / (u_sum + label_smoothing_factor * self.token_num)
+                )
+                for o_count in u
+            ]
             for u, u_sum in zip(counter, u_sums)
         ]
 
         # give <UNK> a very low probability for each label
         if k > 0:
             for u_idx, u_sum in enumerate(u_sums):
-                self.emission_probs[u_idx][0] = (
-                    prob_func((k + label_smoothing_factor)/ (u_sum + label_smoothing_factor*self.token_num)) 
+                self.emission_probs[u_idx][0] = prob_func(
+                    (k + label_smoothing_factor)
+                    / (u_sum + label_smoothing_factor * self.token_num)
                 )
 
         return
-
-    
-
-   
 
     def train(
         self,
@@ -80,7 +83,7 @@ class SecondOrderHiddenMarkovModel:
             self._init_module(train_filepath)
         self.update_emission_probs(
             k=1,
-            label_smoothing_factor=0.3 ,
+            label_smoothing_factor=0.3,
             use_log_likelihood=use_log_likelihood,
         )
         self.update_transition_probs(
@@ -88,8 +91,6 @@ class SecondOrderHiddenMarkovModel:
             use_log_likelihood=use_log_likelihood,
         )
         return
-
-    
 
     def get_transition(self, u: int, v: int) -> float:
         if u == "START":
@@ -142,9 +143,10 @@ class SecondOrderHiddenMarkovModel:
                     offset = offset + _raw_idx + 1
                     copy = values[offset:]
         return k_max_vals, k_max_idxs
+
     def update_transition_probs(
         self,
-        label_smoothing_factor:float=1.0,
+        label_smoothing_factor: float = 1.0,
         use_log_likelihood: bool = True,
     ) -> None:
         """
@@ -158,9 +160,8 @@ class SecondOrderHiddenMarkovModel:
         for i in range(self.label_num + 2):
             tmp = []
             for j in range(self.label_num + 1):
-                tmp.append([0] * (self.label_num+1))
+                tmp.append([0] * (self.label_num + 1))
             counter.append(tmp)
-        
 
         for sample in self.encoded_labels:
             for i in range(len(sample) - 2):
@@ -168,15 +169,15 @@ class SecondOrderHiddenMarkovModel:
                 # counter: counter[-1][u]
                 if i == 0:
                     counter[-2][-1][sample[i]] += 1
-                    counter[-1][sample[i]][sample[i+1]] +=1
+                    counter[-1][sample[i]][sample[i + 1]] += 1
                 # state: u -> v
                 # counter: counter[u][v]
 
-                counter[sample[i]][sample[i+1]][sample[i+2]] += 1
+                counter[sample[i]][sample[i + 1]][sample[i + 2]] += 1
                 # state: v -> STOP
                 # counter: counter[v][-1]
                 if i == len(sample) - 3:
-                    counter[sample[i+1]][sample[i+2]][-1] += 1
+                    counter[sample[i + 1]][sample[i + 2]][-1] += 1
 
         sums = []
         for i in range(self.label_num + 2):
@@ -194,43 +195,76 @@ class SecondOrderHiddenMarkovModel:
         for i in range(self.label_num + 2):
             tmp = []
             for j in range(self.label_num + 1):
-                tmp.append([ prob_func((u + label_smoothing_factor)/(sums[i][j]+ label_smoothing_factor * self.label_num))for u in counter[i][j]])
+                tmp.append(
+                    [
+                        prob_func(
+                            (u + label_smoothing_factor)
+                            / (sums[i][j] + label_smoothing_factor * self.label_num)
+                        )
+                        for u in counter[i][j]
+                    ]
+                )
             self.transition_probs.append(tmp)
         return
 
     def second_order_viterbi(self, X: List[int]) -> List[List[int]]:
-        #(T) * (num_labels) * (num_labels)
+        # (T) * (num_labels) * (num_labels)
         T = len(X)
         mem = []
         for i in range(T):
-            tmp=[]
+            tmp = []
             for j in range(self.label_num):
                 tmp.append([0] * (self.label_num))
             mem.append(tmp)
         for i in range(self.label_num):
-            mem[0][-1][i] = self.transition_probs[-2][-1][i] + self.emission_probs[i][X[0]]
-        if (T>1):
+            mem[0][-1][i] = (
+                self.transition_probs[-2][-1][i] + self.emission_probs[i][X[0]]
+            )
+        if T > 1:
             for i in range(self.label_num):
                 for j in range(self.label_num):
-                    mem[1][i][j] = mem[0][-1][i] + self.transition_probs[-1][i][j] + self.emission_probs[j][X[1]]
+                    mem[1][i][j] = (
+                        mem[0][-1][i]
+                        + self.transition_probs[-1][i][j]
+                        + self.emission_probs[j][X[1]]
+                    )
             for t in range(2, T):
                 for current_label in range(self.label_num):
                     for prev_label in range(self.label_num):
-                        mem[t][prev_label][current_label] = max([mem[t-1][i][prev_label] + self.transition_probs[i][prev_label][current_label] + self.emission_probs[current_label][X[t]]  for i in range(self.label_num)])
+                        mem[t][prev_label][current_label] = max(
+                            [
+                                mem[t - 1][i][prev_label]
+                                + self.transition_probs[i][prev_label][current_label]
+                                + self.emission_probs[current_label][X[t]]
+                                for i in range(self.label_num)
+                            ]
+                        )
         last = []
         for j in range(self.label_num):
-            last.append(max([mem[-1][i][j] + self.transition_probs[i][j][-1] for i in range(self.label_num)]))
+            last.append(
+                max(
+                    [
+                        mem[-1][i][j] + self.transition_probs[i][j][-1]
+                        for i in range(self.label_num)
+                    ]
+                )
+            )
         ret = [self.arg_max(last), self.label_num]
-        for t in range(T-1, 0, -1):
-            max_id = self.arg_max([ mem[t][i][ret[0]] + self.transition_probs[i][ret[0]][ret[1]] for i in range(self.label_num)])
+        for t in range(T - 1, 0, -1):
+            max_id = self.arg_max(
+                [
+                    mem[t][i][ret[0]] + self.transition_probs[i][ret[0]][ret[1]]
+                    for i in range(self.label_num)
+                ]
+            )
             ret.insert(0, max_id)
         return ret[:-1]
 
     def arg_max(self, ls):
         max_ = max(ls)
         for i in range(len(ls)):
-            if (ls[i] == max_): return i 
-
+            if ls[i] == max_:
+                return i
 
     def predict(self, test_filepath: str, top_k: int = 5) -> None:
         export_dir = Path(test_filepath).parent
@@ -258,10 +292,7 @@ class SecondOrderHiddenMarkovModel:
             f.write("\n".join(content))
             print(f"Result saved: '{export_path}'")
 
-
         return
-
-    
 
 
 def main():

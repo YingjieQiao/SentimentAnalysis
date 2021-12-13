@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+green=$(tput setaf 2)
+normal=$(tput sgr0)
+
+function p_header {
+    printf "\n\n${green}%s${normal}\n" "$@"
+}
+
+
+p_header ">>> Running Part 1 on ES... "
+python3 hmm.py --train "ES/train" --test "ES/dev.in" --naive
+
+p_header ">>> Running Part 1 on RU... "
+python3 hmm.py --train "RU/train" --test "RU/dev.in" --naive
+
+p_header ">>> Running Part 2 & 3 on ES... "
+python3 hmm.py --train "ES/train" --test "ES/dev.in" --top-k "5"
+
+p_header ">>> Running Part 2 & 3 on RU... "
+python3 hmm.py --train "RU/train" --test "RU/dev.in" --top-k "5"
+
+p_header ">>> Running Part 4 on ES... "
+python3 second_order_hmm.py --train "ES/train" --test "ES/dev.in"
+
+p_header ">>> Running Part 4 on RU... "
+python3 second_order_hmm.py --train "RU/train" --test "RU/dev.in"
+
+
+
+p_header ">>> Start Evaluating Results... "
+
+p_header ">>> Part 1 Performance on ES dev"
+python3 EvalScript/evalResult.py "ES/dev.out" "ES/dev.p1.out"
+
+p_header ">>> Part 1 Performance on RU dev"
+python3 EvalScript/evalResult.py "RU/dev.out" "RU/dev.p1.out"
+
+p_header ">>> Part 2 Performance on ES dev"
+python3 EvalScript/evalResult.py "ES/dev.out" "ES/dev.p2.out"
+
+p_header ">>> Part 2 Performance on RU dev"
+python3 EvalScript/evalResult.py "RU/dev.out" "RU/dev.p2.out"
+
+p_header ">>> Part 3 Performance on ES dev"
+python3 EvalScript/evalResult.py "ES/dev.out" "ES/dev.p3.out"
+
+p_header ">>> Part 3 Performance on RU dev"
+python3 EvalScript/evalResult.py "RU/dev.out" "RU/dev.p3.out"
+
+p_header ">>> Part 4 Performance on ES dev"
+python3 EvalScript/evalResult.py "ES/dev.out" "ES/dev.p4.out"
+
+p_header ">>> Part 4 Performance on RU dev"
+python3 EvalScript/evalResult.py "RU/dev.out" "RU/dev.p4.out"
