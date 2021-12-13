@@ -1,4 +1,4 @@
-# 50.007 Machine Learning Project
+# 50.007 Machine Learning Project Report
 
 |  Team Member  | Student ID |
 | :-----------: | :--------: |
@@ -8,11 +8,13 @@
 
 ## Introduction
 
-In the repository, we present a pure python based implementation of the hidden markov model (HMM) and second-order hidden markov model for the task of simple sentiment analysis.
+In this project, we present a pure python based implementation of the hidden markov model (HMM) and the second-order hidden markov model for the task of simple sentiment analysis.
 
 Dependencies:
 
 -   **Python 3.6+ Only** (no external libraries required)
+
+Please refer to the [README.md](README.md) for instructions on how to run the project. All outputs are saved in the `outputs` folder. Implementation details and results are reported below.
 
 ## Part 1
 

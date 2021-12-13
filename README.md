@@ -10,7 +10,7 @@
 
 In the repository, we present a pure python based implementation of the hidden markov model (HMM) and second-order hidden markov model for the task of simple sentiment analysis.
 
-**Please refer to our [report](report.pdf) for implementation details and results.**
+**Please refer to our [Report](Report.pdf) for implementation details and results.**
 
 ### Dependencies:
 
